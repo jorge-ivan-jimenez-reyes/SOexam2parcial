@@ -1,13 +1,17 @@
-import PropTypes from 'prop-types';
+import React from 'react';
+import './MessageDisplay.css';
 
 export const MessageDisplay = ({ message, loading, error }) => {
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-  return <p>{message}</p>;
-};
-
-MessageDisplay.propTypes = {
-  message: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
-  error: PropTypes.string
+  return (
+    <div className="message-display">
+      {loading && <div className="loading">Loading...</div>}
+      {error && <div className="error">Error: {error}</div>}
+      {!loading && !error && (
+        <div className="message">
+          <h2>Message from API:</h2>
+          <p>{message}</p>
+        </div>
+      )}
+    </div>
+  );
 };

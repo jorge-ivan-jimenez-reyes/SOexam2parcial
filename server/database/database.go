@@ -7,18 +7,20 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Task struct {
+type SpaceMission struct {
 	ID          int
-	Title       string
-	Description string
+	Name        string
+	Destination string
+	LaunchDate  string
+	Status      string
 }
 
 type Database interface {
-	CreateTask(task *Task) error
-	GetTask(id int) (*Task, error)
-	UpdateTask(task *Task) error
-	DeleteTask(id int) error
-	ListTasks() ([]*Task, error)
+	CreateSpaceMission(mission *SpaceMission) error
+	GetSpaceMission(id int) (*SpaceMission, error)
+	UpdateSpaceMission(mission *SpaceMission) error
+	DeleteSpaceMission(id int) error
+	ListSpaceMissions() ([]*SpaceMission, error)
 	Close() error
 }
 
@@ -39,68 +41,70 @@ func NewPostgresDB(host string, port int, user, password, dbname string) (*Postg
 		return nil, fmt.Errorf("error connecting to the database: %w", err)
 	}
 
-	if err := createTasksTable(db); err != nil {
-		return nil, fmt.Errorf("error creating tasks table: %w", err)
+	if err := createSpaceMissionsTable(db); err != nil {
+		return nil, fmt.Errorf("error creating space_missions table: %w", err)
 	}
 
 	return &PostgresDB{DB: db}, nil
 }
 
-func createTasksTable(db *sql.DB) error {
+func createSpaceMissionsTable(db *sql.DB) error {
 	_, err := db.Exec(`
-		CREATE TABLE IF NOT EXISTS tasks (
+		CREATE TABLE IF NOT EXISTS space_missions (
 			id SERIAL PRIMARY KEY,
-			title TEXT NOT NULL,
-			description TEXT
+			name TEXT NOT NULL,
+			destination TEXT NOT NULL,
+			launch_date TEXT NOT NULL,
+			status TEXT NOT NULL
 		)
 	`)
 	return err
 }
 
-func (pdb *PostgresDB) CreateTask(task *Task) error {
-	query := `INSERT INTO tasks (title, description) VALUES ($1, $2) RETURNING id`
-	return pdb.DB.QueryRow(query, task.Title, task.Description).Scan(&task.ID)
+func (pdb *PostgresDB) CreateSpaceMission(mission *SpaceMission) error {
+	query := `INSERT INTO space_missions (name, destination, launch_date, status) VALUES ($1, $2, $3, $4) RETURNING id`
+	return pdb.DB.QueryRow(query, mission.Name, mission.Destination, mission.LaunchDate, mission.Status).Scan(&mission.ID)
 }
 
-func (pdb *PostgresDB) GetTask(id int) (*Task, error) {
-	query := `SELECT id, title, description FROM tasks WHERE id = $1`
-	task := &Task{}
-	err := pdb.DB.QueryRow(query, id).Scan(&task.ID, &task.Title, &task.Description)
+func (pdb *PostgresDB) GetSpaceMission(id int) (*SpaceMission, error) {
+	query := `SELECT id, name, destination, launch_date, status FROM space_missions WHERE id = $1`
+	mission := &SpaceMission{}
+	err := pdb.DB.QueryRow(query, id).Scan(&mission.ID, &mission.Name, &mission.Destination, &mission.LaunchDate, &mission.Status)
 	if err != nil {
 		return nil, err
 	}
-	return task, nil
+	return mission, nil
 }
 
-func (pdb *PostgresDB) UpdateTask(task *Task) error {
-	query := `UPDATE tasks SET title = $1, description = $2 WHERE id = $3`
-	_, err := pdb.DB.Exec(query, task.Title, task.Description, task.ID)
+func (pdb *PostgresDB) UpdateSpaceMission(mission *SpaceMission) error {
+	query := `UPDATE space_missions SET name = $1, destination = $2, launch_date = $3, status = $4 WHERE id = $5`
+	_, err := pdb.DB.Exec(query, mission.Name, mission.Destination, mission.LaunchDate, mission.Status, mission.ID)
 	return err
 }
 
-func (pdb *PostgresDB) DeleteTask(id int) error {
-	query := `DELETE FROM tasks WHERE id = $1`
+func (pdb *PostgresDB) DeleteSpaceMission(id int) error {
+	query := `DELETE FROM space_missions WHERE id = $1`
 	_, err := pdb.DB.Exec(query, id)
 	return err
 }
 
-func (pdb *PostgresDB) ListTasks() ([]*Task, error) {
-	query := `SELECT id, title, description FROM tasks`
+func (pdb *PostgresDB) ListSpaceMissions() ([]*SpaceMission, error) {
+	query := `SELECT id, name, destination, launch_date, status FROM space_missions`
 	rows, err := pdb.DB.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var tasks []*Task
+	var missions []*SpaceMission
 	for rows.Next() {
-		task := &Task{}
-		if err := rows.Scan(&task.ID, &task.Title, &task.Description); err != nil {
+		mission := &SpaceMission{}
+		if err := rows.Scan(&mission.ID, &mission.Name, &mission.Destination, &mission.LaunchDate, &mission.Status); err != nil {
 			return nil, err
 		}
-		tasks = append(tasks, task)
+		missions = append(missions, mission)
 	}
-	return tasks, nil
+	return missions, nil
 }
 
 func (pdb *PostgresDB) Close() error {

@@ -124,3 +124,17 @@ func (h *Handlers) HandleListTasks(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) HandleHome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Welcome to the Task Manager API!")
 }
+
+func (h *Handlers) HandleESPMessage(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	message := map[string]string{
+		"message": "Bienvenido al Examen Segundo Parcial de Sistemas Operativos",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(message)
+}

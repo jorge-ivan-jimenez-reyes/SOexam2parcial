@@ -8,8 +8,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>React + Go API</h1>
-      <MessageDisplay message={message} loading={loading} error={error} />
+      <header className="App-header">
+        <h1>Examen Segundo Parcial</h1>
+      </header>
+      <main className="App-main">
+        <MessageDisplay message={message} loading={loading} error={error} />
+      </main>
+      <footer className="App-footer">
+        <p>&copy; 2025 UP - Sistemas Operativos</p>
+      </footer>
     </div>
   );
 };

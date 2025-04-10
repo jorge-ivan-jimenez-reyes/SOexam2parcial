@@ -52,6 +52,7 @@ func main() {
 
 	// Set up routes
 	http.HandleFunc("/", h.HandleHome)
+	http.HandleFunc("/api/message", h.HandleESPMessage)
 	http.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
