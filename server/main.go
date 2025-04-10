@@ -52,25 +52,24 @@ func main() {
 
 	// Set up routes
 	http.HandleFunc("/", h.HandleHome)
-	http.HandleFunc("/api/message", h.HandleESPMessage)
-	http.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/space-missions", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			h.HandleListTasks(w, r)
+			h.HandleListSpaceMissions(w, r)
 		case http.MethodPost:
-			h.HandleCreateTask(w, r)
+			h.HandleCreateSpaceMission(w, r)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
-	http.HandleFunc("/tasks/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/space-missions/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			h.HandleGetTask(w, r)
+			h.HandleGetSpaceMission(w, r)
 		case http.MethodPut:
-			h.HandleUpdateTask(w, r)
+			h.HandleUpdateSpaceMission(w, r)
 		case http.MethodDelete:
-			h.HandleDeleteTask(w, r)
+			h.HandleDeleteSpaceMission(w, r)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

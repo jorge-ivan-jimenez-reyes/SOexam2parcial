@@ -1,14 +1,46 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
-export const fetchMessage = async () => {
-  try {
-    const response = await fetch(`${API_URL}/message`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching message:', error);
-    throw error;
+export const fetchSpaceMissions = async () => {
+  const response = await fetch(`${API_URL}/space-missions`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch space missions');
+  }
+  return response.json();
+};
+
+export const createSpaceMission = async (mission) => {
+  const response = await fetch(`${API_URL}/space-missions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(mission),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to create space mission');
+  }
+  return response.json();
+};
+
+export const updateSpaceMission = async (mission) => {
+  const response = await fetch(`${API_URL}/space-missions/${mission.ID}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(mission),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update space mission');
+  }
+  return response.json();
+};
+
+export const deleteSpaceMission = async (id) => {
+  const response = await fetch(`${API_URL}/space-missions/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete space mission');
   }
 };

@@ -28,7 +28,7 @@ services:
 
   client:
     build:
-      context: ../client
+      context: ../client/clienteso
       dockerfile: Dockerfile
     container_name: react-client
     ports:
@@ -36,7 +36,7 @@ services:
     depends_on:
       - api
     environment:
-      - REACT_APP_API_URL=http://localhost:8080/api
+      - REACT_APP_API_URL=http://localhost:8080
 
 volumes:
   postgres-data:

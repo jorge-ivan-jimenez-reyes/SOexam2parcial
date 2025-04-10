@@ -17,30 +17,30 @@ func NewHandlers(db database.Database) *Handlers {
 	return &Handlers{DB: db}
 }
 
-func (h *Handlers) HandleCreateTask(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleCreateSpaceMission(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var task database.Task
-	err := json.NewDecoder(r.Body).Decode(&task)
+	var mission database.SpaceMission
+	err := json.NewDecoder(r.Body).Decode(&mission)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	err = h.DB.CreateTask(&task)
+	err = h.DB.CreateSpaceMission(&mission)
 	if err != nil {
-		http.Error(w, "Error creating task", http.StatusInternalServerError)
+		http.Error(w, "Error creating space mission", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(task)
+	json.NewEncoder(w).Encode(mission)
 }
 
-func (h *Handlers) HandleGetTask(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleGetSpaceMission(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -49,42 +49,42 @@ func (h *Handlers) HandleGetTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid task ID", http.StatusBadRequest)
+		http.Error(w, "Invalid space mission ID", http.StatusBadRequest)
 		return
 	}
 
-	task, err := h.DB.GetTask(id)
+	mission, err := h.DB.GetSpaceMission(id)
 	if err != nil {
-		http.Error(w, "Task not found", http.StatusNotFound)
+		http.Error(w, "Space mission not found", http.StatusNotFound)
 		return
 	}
 
-	json.NewEncoder(w).Encode(task)
+	json.NewEncoder(w).Encode(mission)
 }
 
-func (h *Handlers) HandleUpdateTask(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleUpdateSpaceMission(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var task database.Task
-	err := json.NewDecoder(r.Body).Decode(&task)
+	var mission database.SpaceMission
+	err := json.NewDecoder(r.Body).Decode(&mission)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	err = h.DB.UpdateTask(&task)
+	err = h.DB.UpdateSpaceMission(&mission)
 	if err != nil {
-		http.Error(w, "Error updating task", http.StatusInternalServerError)
+		http.Error(w, "Error updating space mission", http.StatusInternalServerError)
 		return
 	}
 
-	json.NewEncoder(w).Encode(task)
+	json.NewEncoder(w).Encode(mission)
 }
 
-func (h *Handlers) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleDeleteSpaceMission(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -93,48 +93,34 @@ func (h *Handlers) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Query().Get("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid task ID", http.StatusBadRequest)
+		http.Error(w, "Invalid space mission ID", http.StatusBadRequest)
 		return
 	}
 
-	err = h.DB.DeleteTask(id)
+	err = h.DB.DeleteSpaceMission(id)
 	if err != nil {
-		http.Error(w, "Error deleting task", http.StatusInternalServerError)
+		http.Error(w, "Error deleting space mission", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (h *Handlers) HandleListTasks(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) HandleListSpaceMissions(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	tasks, err := h.DB.ListTasks()
+	missions, err := h.DB.ListSpaceMissions()
 	if err != nil {
-		http.Error(w, "Error listing tasks", http.StatusInternalServerError)
+		http.Error(w, "Error listing space missions", http.StatusInternalServerError)
 		return
 	}
 
-	json.NewEncoder(w).Encode(tasks)
+	json.NewEncoder(w).Encode(missions)
 }
 
 func (h *Handlers) HandleHome(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Welcome to the Task Manager API!")
-}
-
-func (h *Handlers) HandleESPMessage(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	message := map[string]string{
-		"message": "Bienvenido al Examen Segundo Parcial de Sistemas Operativos",
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(message)
+	fmt.Fprintln(w, "Welcome to the Space Missions API!")
 }
