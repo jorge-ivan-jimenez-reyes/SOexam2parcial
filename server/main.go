@@ -11,12 +11,13 @@ import (
 
 // Configuración de la conexión a la base de datos
 const (
-	host     = "localhost" // O el nombre del contenedor si está en Docker
-	port     = 5432
+	host     = "postgres" 
+	port     = 5432       
 	user     = "admin"
 	password = "admin"
-	dbname   = "mi_base"
+	dbname   = "go_base"
 )
+
 
 var db *sql.DB
 
