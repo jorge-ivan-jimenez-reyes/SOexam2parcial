@@ -102,10 +102,10 @@ const Dashboard = () => {
           <tbody>
             {missions.map((mission) => (
               <tr key={mission.ID} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">{mission.name}</td>
-                <td className="border px-4 py-2">{mission.destination}</td>
-                <td className="border px-4 py-2">{mission.launchDate}</td>
-                <td className="border px-4 py-2">{mission.status}</td>
+                <td className="border px-4 py-2 text-black">{mission.name}</td>
+                <td className="border px-4 py-2 text-black">{mission.destination}</td>
+                <td className="border px-4 py-2 text-black">{mission.launchDate}</td>
+                <td className="border px-4 py-2 text-black">{mission.status}</td>
                 <td className="border px-4 py-2">
                   <button 
                     onClick={() => handleDelete(mission.ID)}
