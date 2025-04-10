@@ -28,38 +28,74 @@ El contenedor permite levantar Godot en servidores o pipelines de CI/CD para **c
 - **Modo de ejecución:**
   - Godot se ejecuta automáticamente en **modo headless** con:
 
-````bash
+```dockerfile
 CMD ["godot", "--headless"]
 ```
 
-
-
+---
 
 ## Pasos para construir y correr el contenedor
 
 ### 1. Construir la imagen
 
-Usé este comando:
+Usé el siguiente comando:
 
 ```bash
 docker buildx build --platform linux/amd64 --load -t godot-container .
+```
 
+**¿Por qué?**
 
-Porque:
+- Estoy usando una **Mac M1/M2 (Apple Silicon)**, que tiene arquitectura **ARM64**.
+- El binario de **Godot 4.4** descargado es para **Linux x86_64 (Intel/AMD)**.
+- Por eso forcé la plataforma a **linux/amd64** usando `--platform` para hacerlo compatible.
+- El flag `--load` asegura que la imagen se cargue en el motor Docker clásico.
 
-- Estoy usando una Mac M1/M2 (Apple Silicon), que tiene arquitectura ARM64
-- El binario de Godot 4.4 que descargamos es para Linux x86_64 (Intel/AMD).
-- Por eso forcé la plataforma a linux/amd64 usando --platform para construirlo compatible.
+---
 
-
-## Correr el contenedor
+### 2. Correr el contenedor
 
 Usé este comando:
 
 ```bash
 docker run --rm --platform linux/amd64 godot-container
+```
 
-## Resultado Esperado
+**¿Por qué?**
 
+- Nuevamente, debido a la arquitectura **ARM64** de mi Mac, al correr la imagen necesito forzar la emulación a **linux/amd64**.
+- Esto permite que Docker utilice **QEMU** para correr imágenes diseñadas para Intel/AMD en mi Mac Apple Silicon.
+
+---
+
+## Resultado esperado
+
+Cuando corro el contenedor, obtengo como salida:
+
+```plaintext
 Godot Engine v4.4.stable.official.4c311cbee - https://godotengine.org
-````
+```
+
+✅ Esto confirma que **Godot Engine arrancó correctamente en modo headless**.
+
+---
+
+## Notas adicionales
+
+- **Warnings de fuentes:** Inicialmente Godot mostraba errores de `fontconfig` porque no encontraba librerías de fuentes.  
+  Se solucionó instalando `libfontconfig1` en el `Dockerfile`.
+- **Modo headless:**  
+  El contenedor está configurado para correr Godot sin interfaz gráfica, ideal para **exportar proyectos automáticamente** o usar en **pipelines de integración continua (CI/CD)**.
+
+---
+
+# 📦 Comandos principales usados
+
+```bash
+docker buildx build --platform linux/amd64 --load -t godot-container .
+docker run --rm --platform linux/amd64 godot-container
+```
+
+---
+
+✅ **Este proyecto cumple con los requisitos de la Primera Parte del Examen** y demuestra cómo correr Godot Engine en modo automático dentro de un contenedor Docker usando Mac ARM64.
