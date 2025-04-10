@@ -58,7 +58,31 @@ func createSpaceMissionsTable(db *sql.DB) error {
 			status TEXT NOT NULL
 		)
 	`)
-	return err
+	if err != nil {
+		return err
+	}
+
+	// Check if the table is empty
+	var count int
+	err = db.QueryRow("SELECT COUNT(*) FROM space_missions").Scan(&count)
+	if err != nil {
+		return err
+	}
+
+	// If the table is empty, add some seed data
+	if count == 0 {
+		_, err = db.Exec(`
+			INSERT INTO space_missions (name, destination, launch_date, status) VALUES
+			('Apollo 11', 'Moon', '1969-07-16', 'Completed'),
+			('Mars 2020', 'Mars', '2020-07-30', 'In Progress'),
+			('Voyager 1', 'Interstellar Space', '1977-09-05', 'Ongoing')
+		`)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (pdb *PostgresDB) CreateSpaceMission(mission *SpaceMission) error {
