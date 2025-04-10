@@ -51,8 +51,29 @@ func main() {
 	h := handlers.NewHandlers(db)
 
 	// Set up routes
-	http.HandleFunc("/", h.HandleGet)
-	http.HandleFunc("/db", h.HandleDBQuery)
+	http.HandleFunc("/", h.HandleHome)
+	http.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			h.HandleListTasks(w, r)
+		case http.MethodPost:
+			h.HandleCreateTask(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+	http.HandleFunc("/tasks/", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			h.HandleGetTask(w, r)
+		case http.MethodPut:
+			h.HandleUpdateTask(w, r)
+		case http.MethodDelete:
+			h.HandleDeleteTask(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
 
 	fmt.Println("Server listening on http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
