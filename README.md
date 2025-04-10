@@ -1,4 +1,4 @@
-# 📄 `README.md` — Examen Primera Parte: Contenedor Godot Headless
+# — Examen Primera Parte: Contenedor Godot Headless
 
 ## Descripción
 
