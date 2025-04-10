@@ -26,5 +26,15 @@ services:
       - DB_PASSWORD=admin
       - DB_NAME=go_base
 
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    container_name: react-client
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+
 volumes:
   postgres-data:
