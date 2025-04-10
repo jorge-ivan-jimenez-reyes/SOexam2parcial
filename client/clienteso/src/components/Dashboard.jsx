@@ -15,9 +15,11 @@ const Dashboard = () => {
     try {
       setLoading(true);
       const data = await fetchSpaceMissions();
+      console.log('Fetched missions:', data); // Add this line
       setMissions(data);
       setError(null);
     } catch (err) {
+      console.error('Error fetching missions:', err); // Add this line
       setError('Failed to load space missions');
     } finally {
       setLoading(false);
@@ -89,35 +91,39 @@ const Dashboard = () => {
       {error && <p className="text-center text-red-500">{error}</p>}
       
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-navy text-white">
-              <th className="border px-4 py-2 text-left">Name</th>
-              <th className="border px-4 py-2 text-left">Destination</th>
-              <th className="border px-4 py-2 text-left">Launch Date</th>
-              <th className="border px-4 py-2 text-left">Status</th>
-              <th className="border px-4 py-2 text-left">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {missions.map((mission) => (
-              <tr key={mission.ID} className="hover:bg-gray-50">
-                <td className="border px-4 py-2 text-black">{mission.name}</td>
-                <td className="border px-4 py-2 text-black">{mission.destination}</td>
-                <td className="border px-4 py-2 text-black">{mission.launchDate}</td>
-                <td className="border px-4 py-2 text-black">{mission.status}</td>
-                <td className="border px-4 py-2">
-                  <button 
-                    onClick={() => handleDelete(mission.ID)}
-                    className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition duration-300"
-                  >
-                    Delete
-                  </button>
-                </td>
+        {missions.length > 0 ? (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-navy text-white">
+                <th className="border px-4 py-2 text-left">Name</th>
+                <th className="border px-4 py-2 text-left">Destination</th>
+                <th className="border px-4 py-2 text-left">Launch Date</th>
+                <th className="border px-4 py-2 text-left">Status</th>
+                <th className="border px-4 py-2 text-left">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {missions.map((mission) => (
+                <tr key={mission.ID} className="hover:bg-gray-50">
+                  <td className="border px-4 py-2 text-black">{mission.name}</td>
+                  <td className="border px-4 py-2 text-black">{mission.destination}</td>
+                  <td className="border px-4 py-2 text-black">{mission.launchDate}</td>
+                  <td className="border px-4 py-2 text-black">{mission.status}</td>
+                  <td className="border px-4 py-2">
+                    <button 
+                      onClick={() => handleDelete(mission.ID)}
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 transition duration-300"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-center text-gray-600">No missions available</p>
+        )}
       </div>
     </div>
   );
