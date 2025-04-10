@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"mi-servidor-go/database"
 )
@@ -46,7 +47,14 @@ func (h *Handlers) HandleGetSpaceMission(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	idStr := r.URL.Query().Get("id")
+	// Extract the ID from the URL path
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) != 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+
+	idStr := parts[2]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid space mission ID", http.StatusBadRequest)
@@ -68,13 +76,28 @@ func (h *Handlers) HandleUpdateSpaceMission(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Extract the ID from the URL path
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) != 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+
+	idStr := parts[2]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid space mission ID", http.StatusBadRequest)
+		return
+	}
+
 	var mission database.SpaceMission
-	err := json.NewDecoder(r.Body).Decode(&mission)
+	err = json.NewDecoder(r.Body).Decode(&mission)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
+	mission.ID = id
 	err = h.DB.UpdateSpaceMission(&mission)
 	if err != nil {
 		http.Error(w, "Error updating space mission", http.StatusInternalServerError)
@@ -90,7 +113,14 @@ func (h *Handlers) HandleDeleteSpaceMission(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	idStr := r.URL.Query().Get("id")
+	// Extract the ID from the URL path
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) != 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return
+	}
+
+	idStr := parts[2]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		http.Error(w, "Invalid space mission ID", http.StatusBadRequest)

@@ -16,7 +16,7 @@ RUN pnpm install
 COPY clienteso/ ./
 
 # Create .env file
-RUN echo "VITE_API_URL=http://localhost/api" > .env
+RUN echo "VITE_API_URL=http://localhost:8080" > .env
 
 # Build the application
 RUN pnpm run build
