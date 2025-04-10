@@ -12,7 +12,7 @@ import (
 
 // Database connection configuration
 const (
-	host     = "postgres"
+	host     = "db"
 	port     = 5432
 	user     = "admin"
 	password = "admin"

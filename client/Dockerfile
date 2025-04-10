@@ -1,15 +1,22 @@
 # Build stage
-FROM node:14 as build
+FROM node:18 as build
 
 WORKDIR /app
 
-COPY clienteso/package*.json ./
+# Install pnpm
+RUN npm install -g pnpm
 
-RUN npm install
+# Copy package.json and pnpm-lock.yaml (if available)
+COPY clienteso/package.json clienteso/pnpm-lock.yaml* ./
 
-COPY clienteso/ .
+# Install dependencies
+RUN pnpm install
 
-RUN npm run build
+# Copy the rest of the application
+COPY clienteso/ ./
+
+# Build the application
+RUN pnpm run build
 
 # Production stage
 FROM nginx:alpine
