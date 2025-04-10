@@ -1,91 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import styled from 'styled-components';
 import WelcomeScreen from './components/WelcomeScreen';
-import MissionsManager from './components/MissionsManager';
-import './App.css';
-
-const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #f0f8ff;
-  max-width: 1308px;
-  margin: 0 auto;
-`;
-
-const NavBar = styled.nav`
-  background-color: #0047ab;
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-  width: 100%;
-`;
-
-const NavLinks = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-
-const NavLink = styled(Link)`
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-  &:hover {
-    background-color: #1e90ff;
-  }
-`;
-
-const MainContent = styled.main`
-  flex: 1;
-  padding: 2rem;
-  width: 100%;
-`;
-
-const Footer = styled.footer`
-  background-color: #0047ab;
-  color: #ffffff;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-`;
-
-const FooterContent = styled.div`
-  width: 100%;
-  text-align: center;
-`;
+import Dashboard from './components/Dashboard';
 
 const App = () => {
+  const [showWelcome, setShowWelcome] = useState(true);
+
+  const closeWelcomeScreen = () => {
+    setShowWelcome(false);
+  };
+
   return (
     <Router>
-      <AppContainer>
-        <NavBar>
-          <NavLinks>
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/missions">Missions</NavLink>
-          </NavLinks>
-        </NavBar>
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <nav className="bg-blue-600 text-white p-4">
+          <div className="container mx-auto flex justify-between items-center">
+            <Link to="/" className="text-2xl font-bold">Space Missions</Link>
+            <div>
+              <Link to="/" className="mr-4 hover:text-blue-200">Home</Link>
+              <Link to="/dashboard" className="hover:text-blue-200">Dashboard</Link>
+            </div>
+          </div>
+        </nav>
 
-        <MainContent>
+        <main className="flex-grow container mx-auto p-4">
           <Routes>
-            <Route path="/" element={<WelcomeScreen />} />
-            <Route path="/missions" element={<MissionsManager />} />
+            <Route path="/" element={showWelcome ? <WelcomeScreen onClose={closeWelcomeScreen} /> : <Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
-        </MainContent>
+        </main>
 
-        <Footer>
-          <FooterContent>
+        <footer className="bg-blue-600 text-white p-4">
+          <div className="container mx-auto text-center">
             <p>&copy; 2025 UP - Sistemas Operativos</p>
-          </FooterContent>
-        </Footer>
-      </AppContainer>
+          </div>
+        </footer>
+      </div>
     </Router>
   );
 };
