@@ -46,7 +46,7 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">Space Missions Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-navy">Space Missions Dashboard</h1>
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
@@ -55,7 +55,7 @@ const Dashboard = () => {
             value={newMission.name}
             onChange={(e) => setNewMission({ ...newMission, name: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy"
           />
           <input
             type="text"
@@ -63,7 +63,7 @@ const Dashboard = () => {
             value={newMission.destination}
             onChange={(e) => setNewMission({ ...newMission, destination: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy"
           />
           <input
             type="date"
@@ -71,7 +71,7 @@ const Dashboard = () => {
             value={newMission.launchDate}
             onChange={(e) => setNewMission({ ...newMission, launchDate: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy"
           />
           <input
             type="text"
@@ -79,10 +79,10 @@ const Dashboard = () => {
             value={newMission.status}
             onChange={(e) => setNewMission({ ...newMission, status: e.target.value })}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy"
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Add Mission</button>
+        <button type="submit" className="w-full bg-navy text-white py-2 px-4 rounded-md hover:bg-navy-light transition duration-300">Add Mission</button>
       </form>
 
       {loading && <p className="text-center text-gray-600">Loading...</p>}
@@ -91,7 +91,7 @@ const Dashboard = () => {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-navy text-white">
               <th className="border px-4 py-2 text-left">Name</th>
               <th className="border px-4 py-2 text-left">Destination</th>
               <th className="border px-4 py-2 text-left">Launch Date</th>
