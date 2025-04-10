@@ -30,6 +30,10 @@ El contenedor permite levantar Godot en servidores o pipelines de CI/CD para **c
 
 ````bash
 CMD ["godot", "--headless"]
+```
+
+
+
 
 ## Pasos para construir y correr el contenedor
 
