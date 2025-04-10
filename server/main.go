@@ -1,81 +1,61 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
-	_ "github.com/lib/pq"
+	"mi-servidor-go/database"
+	"mi-servidor-go/handlers"
 )
 
-// Configuración de la conexión a la base de datos
+// Database connection configuration
 const (
-	host     = "postgres" 
-	port     = 5432       
+	host     = "postgres"
+	port     = 5432
 	user     = "admin"
 	password = "admin"
 	dbname   = "go_base"
 )
 
-
-var db *sql.DB
-
-// Función para manejar solicitudes GET en la raíz
-func handleGet(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
-		return
+func waitForDB(db *database.PostgresDB) error {
+	var err error
+	for i := 0; i < 10; i++ { // 10 intentos
+		err = db.DB.Ping()
+		if err == nil {
+			return nil
+		}
+		log.Println("Esperando a que la base de datos esté lista...")
+		time.Sleep(2 * time.Second) // Esperar 2 segundos
 	}
-	fmt.Fprintln(w, "¡Hola, has realizado un GET!")
-}
-
-// Función para manejar una consulta a la base de datos
-func handleDBQuery(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// Ejecuta una consulta (ejemplo: obtener la fecha actual en PostgreSQL)
-	var currentTime string
-	err := db.QueryRow("SELECT NOW()").Scan(&currentTime)
-	if err != nil {
-		http.Error(w, "Error al consultar la base de datos", http.StatusInternalServerError)
-		log.Println("Error en la consulta:", err)
-		return
-	}
-
-	// Responde con la fecha y hora actual de PostgreSQL
-	fmt.Fprintf(w, "Hora actual en la base de datos: %s\n", currentTime)
+	return err
 }
 
 func main() {
-	// Conexión a la base de datos
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
-	var err error
-	db, err = sql.Open("postgres", connStr)
+	// Initialize database connection
+	db, err := database.NewPostgresDB(host, port, user, password, dbname)
 	if err != nil {
-		log.Fatal("Error al abrir la conexión a la base de datos:", err)
+		log.Fatal("Error connecting to the database:", err)
 	}
 	defer db.Close()
 
-	// Verificar la conexión a la base de datos
-	err = db.Ping()
-	if err != nil {
-		log.Fatal("Error al conectar con la base de datos:", err)
+	// Wait for the database to be ready
+	if err := waitForDB(db); err != nil {
+		log.Fatal("Database not available:", err)
 	}
 
-	fmt.Println("¡Conectado a PostgreSQL!")
+	fmt.Println("Connected to PostgreSQL!")
 
-	// Rutas del servidor
-	http.HandleFunc("/", handleGet)
-	http.HandleFunc("/db", handleDBQuery) // Nueva ruta para la base de datos
+	// Initialize handlers
+	h := handlers.NewHandlers(db)
 
-	fmt.Println("Servidor escuchando en http://localhost:8080")
+	// Set up routes
+	http.HandleFunc("/", h.HandleGet)
+	http.HandleFunc("/db", h.HandleDBQuery)
+
+	fmt.Println("Server listening on http://localhost:8080")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal("Error al iniciar el servidor:", err)
+		log.Fatal("Error starting the server:", err)
 	}
 }
