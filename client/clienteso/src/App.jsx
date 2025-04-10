@@ -5,40 +5,87 @@ import WelcomeScreen from './components/WelcomeScreen';
 import MissionsManager from './components/MissionsManager';
 import './App.css';
 
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  max-width: 1308px;
+  margin: 0 auto;
+`;
+
 const NavBar = styled.nav`
-  background-color: #282c34;
-  padding: 10px;
+  background-color: #0047ab;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  width: 100%;
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 1rem;
 `;
 
 const NavLink = styled(Link)`
-  color: white;
-  margin-right: 15px;
+  color: #ffffff;
   text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
   &:hover {
-    text-decoration: underline;
+    background-color: #1e90ff;
   }
+`;
+
+const MainContent = styled.main`
+  flex: 1;
+  padding: 2rem;
+  width: 100%;
+`;
+
+const Footer = styled.footer`
+  background-color: #0047ab;
+  color: #ffffff;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+const FooterContent = styled.div`
+  width: 100%;
+  text-align: center;
 `;
 
 const App = () => {
   return (
     <Router>
-      <div className="App">
+      <AppContainer>
         <NavBar>
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/missions">Missions</NavLink>
+          <NavLinks>
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/missions">Missions</NavLink>
+          </NavLinks>
         </NavBar>
 
-        <main className="App-main">
+        <MainContent>
           <Routes>
             <Route path="/" element={<WelcomeScreen />} />
             <Route path="/missions" element={<MissionsManager />} />
           </Routes>
-        </main>
+        </MainContent>
 
-        <footer className="App-footer">
-          <p>&copy; 2025 UP - Sistemas Operativos</p>
-        </footer>
-      </div>
+        <Footer>
+          <FooterContent>
+            <p>&copy; 2025 UP - Sistemas Operativos</p>
+          </FooterContent>
+        </Footer>
+      </AppContainer>
     </Router>
   );
 };

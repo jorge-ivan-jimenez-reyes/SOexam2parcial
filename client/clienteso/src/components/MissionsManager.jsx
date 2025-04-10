@@ -4,16 +4,19 @@ import { fetchSpaceMissions, createSpaceMission, deleteSpaceMission } from '../s
 
 const Container = styled.div`
   padding: 20px;
+  background-color: #f0f8ff;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Th = styled.th`
-  background-color: #282c34;
+  background-color: #0047ab;
   color: white;
   padding: 10px;
   text-align: left;
@@ -21,17 +24,18 @@ const Th = styled.th`
 
 const Td = styled.td`
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e6f2ff;
 `;
 
 const Button = styled.button`
-  background-color: #61dafb;
-  color: #282c34;
+  background-color: #1e90ff;
+  color: white;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
+  border-radius: 4px;
   &:hover {
-    background-color: #45b7d8;
+    background-color: #4169e1;
   }
 `;
 
@@ -40,11 +44,26 @@ const Form = styled.form`
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Input = styled.input`
-  padding: 5px;
+  padding: 8px;
   flex: 1;
+  border: 1px solid #b0c4de;
+  border-radius: 4px;
+  &:focus {
+    outline: none;
+    border-color: #4169e1;
+  }
+`;
+
+const Title = styled.h1`
+  color: #0047ab;
+  margin-bottom: 20px;
 `;
 
 const MissionsManager = () => {
